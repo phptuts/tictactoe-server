@@ -2,9 +2,14 @@ import express from 'express';
 import WebSocket from 'ws';
 import { TicTacToe, GameState } from './game';
 import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const wss = new WebSocket.Server({ port: 40510 });
+const wss = new WebSocket.Server({
+  port: +process.env['WEBSOCKET_PORT']
+});
 const game = new TicTacToe();
 
 let socket: WebSocket;
@@ -34,6 +39,6 @@ const sendMessage = (res: express.Response, message: GameState) => {
   }
 };
 
-app.listen(4001, () => {
+app.listen(process.env.PORT, () => {
   console.log('working');
 });
