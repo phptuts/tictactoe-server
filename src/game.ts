@@ -54,7 +54,7 @@ export class TicTacToe {
     this.nextPlayer = 'X';
     return {
       board: this.board,
-      winner: this.getWinner(),
+      winner: null,
       nextPlayer: this.nextPlayer,
       errorMessage: undefined
     };
