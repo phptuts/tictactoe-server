@@ -15,10 +15,8 @@ const game = new TicTacToe();
 let socket: WebSocket;
 
 wss.on('connection', function connection(ws) {
-  socket = ws;
   const message = JSON.stringify(game.getGameState());
-  console.log(message);
-  socket.send(message);
+  ws.send(message);
 });
 
 app.use(cors());
@@ -34,9 +32,11 @@ app.get('/reset', (req, res) => {
 
 const sendMessage = (res: express.Response, message: GameState) => {
   res.json(message);
-  if (socket) {
-    socket.send(JSON.stringify(message));
-  }
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
 };
 
 app.listen(process.env.PORT, () => {
